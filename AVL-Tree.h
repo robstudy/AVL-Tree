@@ -9,6 +9,7 @@ class AVL_Tree
 		AVL_Tree();
 		void insert(T);
 		void print();
+		bool search(T);
 	
 	private:
 		struct Node {
@@ -25,6 +26,7 @@ class AVL_Tree
 	
 		Node *head;
 		void n_print(Node *);
+		bool n_search(T, Node*);
 		int size;
 };
 
@@ -65,4 +67,21 @@ void AVL_Tree<T>::n_print(Node *node)
 	std::cout << node->data << std::endl;
 	n_print(node->left);
 	n_print(node->right);
+};
+
+template <class T>
+bool AVL_Tree<T>::search(T data)
+{
+	if(!head) return false;
+	else if (head->data == data) return true;
+	n_search(data, head);
+};
+
+template <class T>
+bool AVL_Tree<T>::n_search(T data, Node* node)
+{
+	if(node == NULL) return false;
+	else if(node->data == data) return true;
+	else if(node->data <= data) n_search(data, node->right);
+	else n_search(data, node->left);
 };

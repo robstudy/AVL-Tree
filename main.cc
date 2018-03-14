@@ -9,7 +9,13 @@ int main(){
 	avl.insert(1);
 	avl.insert(4);
 	avl.insert(6);
+	avl.insert(99);
+	avl.insert(0);
 	std::cout << "AVL-TREE!" << std::endl;
 	avl.print();
+	if(avl.search(99)) std::cout << 99 << " in tree!\n";
+	if(avl.search(0)) std::cout << 0 << " in tree!\n";
+	if(avl.search(98)) std::cout << 98 << " in tree!\n";
+	else std::cout << 98 << " not in the tree!\n";
 	return 0;
 }
