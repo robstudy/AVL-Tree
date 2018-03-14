@@ -8,6 +8,7 @@ class AVL_Tree
 	public:
 		AVL_Tree();
 		void insert(T);
+		void print();
 	
 	private:
 		struct Node {
@@ -23,6 +24,7 @@ class AVL_Tree
 		};
 	
 		Node *head;
+		void n_print(Node *);
 		int size;
 };
 
@@ -38,7 +40,7 @@ void AVL_Tree<T>::insert(T data) {
 		head = new Node(NULL, NULL, NULL, data);
 		return;
 	}
-	Node tmp = head;
+	Node *tmp = head;
 	while(tmp->left != NULL && tmp->right != NULL) {
 		if(tmp->data < data && tmp->right != NULL) tmp = tmp->right;
 		else tmp = tmp->left;
@@ -46,4 +48,21 @@ void AVL_Tree<T>::insert(T data) {
 	
 	if(data >= tmp->data) tmp->right = new Node(tmp, NULL, NULL, data);
 	else tmp->left = new Node(tmp, NULL, NULL, data);
+};
+
+template <class T>
+void AVL_Tree<T>::print()
+{
+	if(!head) return;
+	n_print(head);
+};
+
+template <class T>
+void AVL_Tree<T>::n_print(Node *node)
+{
+	if(!node) return;
+	
+	std::cout << node->data << std::endl;
+	n_print(node->left);
+	n_print(node->right);
 };
