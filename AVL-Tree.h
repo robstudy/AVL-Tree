@@ -2,6 +2,20 @@
 //Insertion of values
 //Remove Values
 //Shift for balance
+
+template <typename T>
+struct Node {
+	Node *parent;
+	Node *left;
+	Node *right;
+	T data;
+	Node(Node *p = NULL, Node *l = NULL, Node *r = NULL, T d = NULL):
+		parent(p),
+		left(l),
+		right(r),
+		data(d){}
+};
+
 template <class T>
 class AVL_Tree 
 {
@@ -12,21 +26,11 @@ class AVL_Tree
 		bool search(T);
 	
 	private:
-		struct Node {
-			Node *parent;
-			Node *left;
-			Node *right;
-			T data;
-			Node(Node *p = NULL, Node *l = NULL, Node *r = NULL, T d = NULL):
-				parent(p),
-				left(l),
-				right(r),
-				data(d){}
-		};
-	
-		Node *head;
-		void n_print(Node *);
-		bool n_search(T, Node*);
+		Node<T> *head;
+		void n_print(Node<T> *);
+		bool n_search(T, Node<T>*);
+		Node<T>* rotateRight(Node<T>*);
+		Node<T>* rotateLeft(Node<T>*);
 		int size;
 };
 
@@ -38,18 +42,19 @@ AVL_Tree<T>::AVL_Tree() {
 
 template <class T>
 void AVL_Tree<T>::insert(T data) {
+	if(search(data)) return; 
 	if (!head) {
-		head = new Node(NULL, NULL, NULL, data);
+		head = new Node<T>(NULL, NULL, NULL, data);
 		return;
 	}
-	Node *tmp = head;
+	Node<T> *tmp = head;
 	while(tmp->left != NULL && tmp->right != NULL) {
 		if(tmp->data < data && tmp->right != NULL) tmp = tmp->right;
 		else tmp = tmp->left;
 	}
 	
-	if(data >= tmp->data) tmp->right = new Node(tmp, NULL, NULL, data);
-	else tmp->left = new Node(tmp, NULL, NULL, data);
+	if(data >= tmp->data) tmp->right = new Node<T>(tmp, NULL, NULL, data);
+	else tmp->left = new Node<T>(tmp, NULL, NULL, data);
 };
 
 template <class T>
@@ -60,7 +65,7 @@ void AVL_Tree<T>::print()
 };
 
 template <class T>
-void AVL_Tree<T>::n_print(Node *node)
+void AVL_Tree<T>::n_print(Node<T> *node)
 {
 	if(!node) return;
 	
@@ -78,10 +83,32 @@ bool AVL_Tree<T>::search(T data)
 };
 
 template <class T>
-bool AVL_Tree<T>::n_search(T data, Node* node)
+bool AVL_Tree<T>::n_search(T data, Node<T>* node)
 {
 	if(node == NULL) return false;
 	else if(node->data == data) return true;
 	else if(node->data <= data) n_search(data, node->right);
 	else n_search(data, node->left);
+};
+
+template <class T>
+Node<T>* AVL_Tree<T>::rotateRight(Node<T>* node)
+{
+	//Return the node resulting from right rotation
+	Node<T>* newParent = node->left;
+	Node<T>* branch = newParent->right;
+	newParent->right = node;
+	node->left = branch;
+	return newParent;
+};
+
+template <class T>
+Node<T>* AVL_Tree<T>::rotateLeft(Node<T>* node)
+{
+	//Return the node resulting from a left rotation
+	Node<T>* newParent = node->right;
+	Node<T>* branch = newParent->left;
+	newParent->left = node;
+	node->right = branch;
+	return newParent;
 };
