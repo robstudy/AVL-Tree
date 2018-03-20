@@ -31,6 +31,8 @@ class AVL_Tree
 		bool n_search(T, Node<T>*);
 		Node<T>* rotateRight(Node<T>*);
 		Node<T>* rotateLeft(Node<T>*);
+		int difference(Node<T>*);
+		int height(Node<T>*);
 		int size;
 };
 
@@ -111,4 +113,26 @@ Node<T>* AVL_Tree<T>::rotateLeft(Node<T>* node)
 	newParent->left = node;
 	node->right = branch;
 	return newParent;
+};
+
+//Returns the difference between hight of left and right subtrees
+template <class T>
+int AVL_Tree<T>::difference(Node<T>* n)
+{
+	return height(n->left) - height(n->right);
+};
+
+//Returns height
+template <class T>
+int AVL_Tree<T>::height(Node<T>* n)
+{
+	if(n == NULL) return 0;
+	else {
+		int heightLeft = height(n->left);
+		int heightRight = height(n->right);
+		if (heightLeft > heightRight)
+			return heightLeft + 1;
+		else 
+			return heightRight + 1;
+	}
 };
