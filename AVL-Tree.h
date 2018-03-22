@@ -31,6 +31,9 @@ class AVL_Tree
 		bool n_search(T, Node<T>*);
 		Node<T>* rotateRight(Node<T>*);
 		Node<T>* rotateLeft(Node<T>*);
+		Node<T>* rotateRightLeft(Node<T>*);
+		Node<T>* rotateLeftRight(Node<T>*);
+		Node<T>* balance(Node<T>*);
 		int difference(Node<T>*);
 		int height(Node<T>*);
 		int size;
@@ -51,8 +54,15 @@ void AVL_Tree<T>::insert(T data) {
 	}
 	Node<T> *tmp = head;
 	while(tmp->left != NULL && tmp->right != NULL) {
-		if(tmp->data < data && tmp->right != NULL) tmp = tmp->right;
-		else tmp = tmp->left;
+		if(tmp->data < data && tmp->right != NULL){ 
+			tmp->right = balance(tmp->right);
+			tmp = tmp->right;
+		}
+		else
+		{
+			tmp->left = balance(tmp->left);
+			tmp = tmp->left;
+		}
 	}
 	
 	if(data >= tmp->data) tmp->right = new Node<T>(tmp, NULL, NULL, data);
@@ -115,11 +125,49 @@ Node<T>* AVL_Tree<T>::rotateLeft(Node<T>* node)
 	return newParent;
 };
 
+template <class T>
+Node<T>* AVL_Tree<T>::rotateRightLeft(Node<T>* node)
+{
+	Node<T>* rightNode = node->right;
+	node->right = rotateRight(rightNode);
+	return rotateLeft(node);
+};
+
+template <class T>
+Node<T>* AVL_Tree<T>::rotateLeftRight(Node<T>* node)
+{
+	Node<T>* leftNode = node->left;
+	node->left = rotateLeft(leftNode);
+	return rotateRight(node);
+};
+
+//Checks and balances the subtree
+template <class T>
+Node<T>* AVL_Tree<T>::balance(Node<T>* node)
+{
+	int dif = difference(node);
+	
+	if (dif > 1) {
+		if (difference(node->left) > 1) 
+			return rotateRight(node);
+		else
+			return rotateLeftRight(node);
+	}
+	else if (dif < -1) {
+		if (difference(node->right) < 0) 
+			return rotateLeft(node);
+		else
+			return rotateRightLeft(node);
+	}
+	else
+		return node;
+};
+
 //Returns the difference between hight of left and right subtrees
 template <class T>
-int AVL_Tree<T>::difference(Node<T>* n)
+int AVL_Tree<T>::difference(Node<T>* node)
 {
-	return height(n->left) - height(n->right);
+	return height(node->left) - height(node->right);
 };
 
 //Returns height
