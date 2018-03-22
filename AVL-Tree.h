@@ -5,12 +5,10 @@
 
 template <typename T>
 struct Node {
-	Node *parent;
 	Node *left;
 	Node *right;
 	T data;
-	Node(Node *p = NULL, Node *l = NULL, Node *r = NULL, T d = NULL):
-		parent(p),
+	Node(Node *l = NULL, Node *r = NULL, T d = NULL):
 		left(l),
 		right(r),
 		data(d){}
@@ -59,7 +57,7 @@ void AVL_Tree<T>::n_insert(Node<T>*& node, T data)
 {
 	if(node == NULL)
 	{
-		node = new Node<T>(NULL, NULL, NULL, data);
+		node = new Node<T>(NULL, NULL, data);
 	} else if (data < node->data) {
 		n_insert(node->left, data);
 		node->left = balance(node->left);
