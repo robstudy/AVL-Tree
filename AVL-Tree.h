@@ -22,11 +22,13 @@ class AVL_Tree
 	public:
 		AVL_Tree();
 		void insert(T);
+		void remove(T);
 		void print();
 		bool search(T);
 	
 	private:
 		Node<T> *head;
+		void n_insert(Node<T>*&, T);
 		void n_print(Node<T> *);
 		bool n_search(T, Node<T>*);
 		Node<T>* rotateRight(Node<T>*);
@@ -47,27 +49,31 @@ AVL_Tree<T>::AVL_Tree() {
 
 template <class T>
 void AVL_Tree<T>::insert(T data) {
-	if(search(data)) return; 
-	if (!head) {
-		head = new Node<T>(NULL, NULL, NULL, data);
-		return;
-	}
-	Node<T> *tmp = head;
-	while(tmp->left != NULL && tmp->right != NULL) {
-		if(tmp->data < data && tmp->right != NULL){ 
-			tmp->right = balance(tmp->right);
-			tmp = tmp->right;
-		}
-		else
-		{
-			tmp->left = balance(tmp->left);
-			tmp = tmp->left;
-		}
-	}
-	
-	if(data >= tmp->data) tmp->right = new Node<T>(tmp, NULL, NULL, data);
-	else tmp->left = new Node<T>(tmp, NULL, NULL, data);
+	if(search(data)) return;
+	n_insert(head, data);
+	head = balance(head);
 };
+
+template <class T>
+void AVL_Tree<T>::n_insert(Node<T>*& node, T data)
+{
+	if(node == NULL)
+	{
+		node = new Node<T>(NULL, NULL, NULL, data);
+	} else if (data < node->data) {
+		n_insert(node->left, data);
+		node->left = balance(node->left);
+	} else {
+		n_insert(node->right, data);
+		node->right = balance(node->right);
+	}
+};
+
+template <class T>
+void AVL_Tree<T>::remove(T data) 
+{
+	if (!search(data)) return;
+}
 
 template <class T>
 void AVL_Tree<T>::print()
